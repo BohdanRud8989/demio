@@ -1,0 +1,28 @@
+@import '../../../assets/less/variables';
+
+.custom-form-controls {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+
+  &__btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &--reset {
+      gap: 8px;
+      width: auto;
+    }
+
+    &--submit {
+      background-color: @primary;
+      color: @light;
+
+      &:disabled {
+        background-color: @gray-300;
+        color: @gray-1;
+      }
+    }
+  }
+}

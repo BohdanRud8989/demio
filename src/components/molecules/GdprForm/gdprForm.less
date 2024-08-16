@@ -1,0 +1,27 @@
+@import '../../../assets/less/variables';
+
+.gdpr-form {
+  &__title {
+    font-size: 16px;
+  }
+
+  &__description {
+    text-align: left;
+    color: @gray-1;
+  }
+
+  &__form-item {
+    &:not(:last-child) {
+      margin-bottom: 16px;
+    }
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &--left-aligned {
+      .ant-form-item-control-input-content {
+        flex: unset;
+      }
+    }
+  }
+}
