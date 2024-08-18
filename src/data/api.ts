@@ -1,31 +1,39 @@
-import axios, { AxiosResponse } from 'axios';
-import MockAdapter from 'axios-mock-adapter';
-import { FormValues, SaveDataResponse } from '../types/types';
+import axios, { AxiosResponse } from "axios";
+import MockAdapter from "axios-mock-adapter";
+import { SaveDataResponsePayload, SaveDataRequestPayload } from "../types";
 
+/**
+ * Mocks all app endpoints to fake data
+ * @returns {void}
+ */
 export const mockApi = () => {
   const mock = new MockAdapter(axios);
 
   mock
-      .onPost('/manage/settings/general/save-gdpr')
-      .reply(200, { success: true });
+    .onPost("/manage/settings/general/save-gdpr")
+    .reply(200, { success: true });
   mock
-      .onPost('/manage/settings/general/save-strong-password')
-      .reply(200, { success: true });
+    .onPost("/manage/settings/general/save-strong-password")
+    .reply(200, { success: true });
 };
 
+/**
+ * Saves data to API
+ * @param {string} url - url of the endpoint
+ * @param {SaveDataRequestPayload} payload - request payload
+ * @param {(error: string) => void} errorCallback - error callback in case of server issue
+ * @returns {Promise<boolean>}
+ */
 export const saveDataToApi = async (
-    url: string,
-    payload: Partial<FormValues> & {
-      sessionTime?: number;
-      engagementPercentage?: string;
-    },
-    errorCallback: (error: string) => void
+  url: string,
+  payload: SaveDataRequestPayload,
+  errorCallback: (error: string) => void,
 ): Promise<boolean> => {
   try {
     const { data } = await axios.post<
-        SaveDataResponse,
-        AxiosResponse<SaveDataResponse>
-        >(url, payload);
+      SaveDataResponsePayload,
+      AxiosResponse<SaveDataResponsePayload>
+    >(url, payload);
     const { success, error } = data;
     if (!success) {
       throw new Error(error);

@@ -1,1 +1,1 @@
-export { default as PasswordGdprForm } from './PasswordGdprForm';
+export { default as PasswordGdprForm } from "./PasswordGdprForm";

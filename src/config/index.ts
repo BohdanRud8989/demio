@@ -6,7 +6,6 @@
 
 export const app = {
   mockedApi: true,
-  redirectUrl: 'https://google.com',
-  companyName: 'MEta'
+  redirectUrl: "https://google.com",
+  companyName: "MEta",
 };
-

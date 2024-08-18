@@ -1,7 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-export function useTask<T extends any[]>(
-    callback: (...args: T) => void | Promise<void>
+/**
+ * This hook executes callback as async operation and provides loading status
+ * @param {(...args: T) => void | Promise<void>} callback - callback to execute
+ * @returns {[boolean, (...args: T) => Promise<void>]}
+ */
+export function useTask<T extends object[]>(
+  callback: (...args: T) => void | Promise<void>,
 ): [boolean, (...args: T) => Promise<void>] {
   const [isRunning, setIsRunning] = useState(false);
 
@@ -13,9 +18,7 @@ export function useTask<T extends any[]>(
     }
     setIsRunning(true);
 
-    /*
-        Wrapped into setTimeout to emulate network delay
-     */
+    // Wrapped into setTimeout to emulate network delay
     setTimeout(async () => {
       try {
         await callback(...args);

@@ -1,3 +1,3 @@
-export * from './PasswordForm';
-export * from './GdprForm';
-export * from './FormControls';
+export * from "./PasswordFormItems";
+export * from "./GdprFormItems";
+export * from "./FormControls";
