@@ -14,7 +14,7 @@ import { useState, useEffect, useRef } from "react";
     }}
  */
 export function useEngagementTracker() {
-  const [isFocused, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState(true);
   const [totalTime, setTotalTime] = useState(0);
   const [focusedTime, setFocusedTime] = useState(0);
   const engagementPercentage = ((focusedTime / totalTime) * 100).toFixed(2);
@@ -53,7 +53,7 @@ export function useEngagementTracker() {
 
   const resetTracker = () => {
     clearInterval(intervalIdRef.current);
-    setIsFocused(false);
+    setIsFocused(true);
     setTotalTime(0);
     setFocusedTime(0);
   };

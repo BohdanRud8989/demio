@@ -22,14 +22,19 @@ npm install
 
 ## Configuration of the app:
 
-- change `.env` file
+There is `.env` file, you can configure it.
 
-For instance, to use mocked API change this param to:
+- to use mocked API change this param to:
 
 ```
 REACT_APP_MOCKED_API=true
 ```
 
+- to emulate server error response use this combination:
+```
+VITE_REACT_APP_MOCKED_API=true
+VITE_REACT_APP_EMULATE_SUCCESS_RESPONSE=false
+```
 ## Run in Development mode:
 
 - Install dependencies: `npm install`

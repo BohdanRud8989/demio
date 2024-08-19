@@ -6,7 +6,7 @@ import { mockApi } from "./data";
 import "./App.less";
 
 // turn on mocked API if that specified in config
-if (app.mockedApi) {
+if (app.mockedApi === "true") {
   mockApi();
 }
 
