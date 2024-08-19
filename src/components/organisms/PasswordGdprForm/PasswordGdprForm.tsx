@@ -41,7 +41,7 @@ const PasswordGdprForm = ({ redirectUrl }: GdprUpdatePasswordProps) => {
   /* it's breaks Single Responsibility principle, but it's not possible
      to call this method in App.tsx since it requires messageApi */
   const redirectUser = () => {
-    if (redirectUrl !== undefined) {
+    if (redirectUrl !== undefined && redirectUrl !== "") {
       messageApi.open({
         type: "success",
         content: `redirecting user to  ${redirectUrl}`,
