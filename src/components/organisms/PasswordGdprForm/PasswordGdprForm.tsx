@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Form, Grid, message } from "antd";
 import {
   PasswordFormItems,
@@ -8,6 +9,7 @@ import { FormValues } from "../../../types";
 import { initialFormValue } from "../../../utils";
 import { useTask, useEngagementTracker } from "../../../hooks";
 import { saveDataToApi } from "../../../data";
+import { SaveGdprRequestPayload } from "../../../types";
 
 import "./passwordGdprForm.less";
 
@@ -18,14 +20,15 @@ type GdprUpdatePasswordProps = {
 };
 
 /**
- * Main Form which are build from Password and GDPR forms
- * @param {string} redirectUrl - url to redirect user after once form has been saved
+ * Main Form which are build from Password and GDPR form items
+ * @param {string} redirectUrl - url to redirect user after once form has been submitted
  * @returns {JSX.Element}
  */
 const PasswordGdprForm = ({ redirectUrl }: GdprUpdatePasswordProps) => {
   const [form] = Form.useForm<FormValues>();
   const [messageApi, contextHolder] = message.useMessage();
   const { lg: isDesktop } = useBreakpoint();
+  const [isRedirectingUser, setIsRedirectingUser] = useState(false);
   const {
     totalTime: sessionTime,
     engagementPercentage,
@@ -40,16 +43,22 @@ const PasswordGdprForm = ({ redirectUrl }: GdprUpdatePasswordProps) => {
 
   /* it's breaks Single Responsibility principle, but it's not possible
      to call this method in App.tsx since it requires messageApi */
-  const redirectUser = () => {
-    if (redirectUrl !== undefined && redirectUrl !== "") {
+  const redirectUser = (redirectUrl: string = "") => {
+    if (typeof redirectUrl === "string") {
+      setIsRedirectingUser(true);
       messageApi.open({
-        type: "success",
+        type: "loading",
         content: `redirecting user to  ${redirectUrl}`,
         duration: 5,
+        onClose: () => {
+          setIsRedirectingUser(false);
+          window.location.href = redirectUrl;
+        },
       });
-      setTimeout(() => {
+      const timeoutID = setTimeout(() => {
         window.location.href = redirectUrl;
-      }, 10000);
+        clearTimeout(timeoutID);
+      }, 5000);
     }
   };
 
@@ -73,7 +82,7 @@ const PasswordGdprForm = ({ redirectUrl }: GdprUpdatePasswordProps) => {
         location,
         sessionTime,
         engagementPercentage,
-      }),
+      } as SaveGdprRequestPayload),
       savePassword(passwordFirst),
     ]);
     if (isGdprSaved && isPasswordSaved) {
@@ -83,7 +92,7 @@ const PasswordGdprForm = ({ redirectUrl }: GdprUpdatePasswordProps) => {
         content: `Password and preferences successfully updated. User session time: ${sessionTime}, engagement: ${engagementPercentage}%`,
         duration: 5,
         onClose: () => {
-          redirectUser();
+          redirectUser(redirectUrl);
         },
       });
     }
@@ -96,10 +105,7 @@ const PasswordGdprForm = ({ redirectUrl }: GdprUpdatePasswordProps) => {
     location,
     sessionTime,
     engagementPercentage,
-  }: Omit<FormValues, "passwordFirst" | "passwordSecond"> & {
-    sessionTime: number;
-    engagementPercentage: string;
-  }): Promise<boolean> =>
+  }: SaveGdprRequestPayload): Promise<boolean> =>
     await saveDataToApi(
       "/manage/settings/general/save-gdpr",
       { gdpr, company, email, location, sessionTime, engagementPercentage },
@@ -117,11 +123,7 @@ const PasswordGdprForm = ({ redirectUrl }: GdprUpdatePasswordProps) => {
 
   return (
     <>
-      {!isDesktop ? (
-        <main className="password-gdpr-form__no-support">
-          This form is not available from mobile devices
-        </main>
-      ) : (
+      {isDesktop ? (
         <>
           {/* This solution provided by ant Design itself to make messageApi work */}
           {contextHolder}
@@ -138,13 +140,17 @@ const PasswordGdprForm = ({ redirectUrl }: GdprUpdatePasswordProps) => {
             <FormControls
               resetButton={{ onClick: handleReset, text: "Reset form" }}
               submitButton={{
-                loading: submitting,
-                disabled: submitting,
+                loading: submitting || isRedirectingUser,
+                disabled: submitting || isRedirectingUser,
                 text: "Update My Password & Preferences",
               }}
             />
           </Form>
         </>
+      ) : (
+        <main className="password-gdpr-form__no-support">
+          This form is not available from mobile devices
+        </main>
       )}
     </>
   );

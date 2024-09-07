@@ -16,10 +16,9 @@ export const mockApi = () => {
       error: "500 Internal Server Error: couldn't save the data",
     },
   };
-  const currentResponse =
-    app.emulateSuccessResponse === "true"
-      ? responses["success"]
-      : responses["error"];
+  const currentResponse = app.emulateSuccessResponse
+    ? responses["success"]
+    : responses["error"];
 
   mock.onPost("/manage/settings/general/save-gdpr").reply(200, currentResponse);
   mock

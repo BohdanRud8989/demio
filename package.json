@@ -17,11 +17,12 @@
       "pre-commit": "lint-staged"
     }
   },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "prettier --write --ignore-unknown"
-    ]
-  },
+    "lint-staged": {
+      "*.{js,jsx,ts,tsx}": [
+        "eslint --fix",
+        "prettier --write --ignore-unknown"
+      ]
+    },
   "dependencies": {
     "antd": "^5.20.1",
     "axios-mock-adapter": "^2.0.0",

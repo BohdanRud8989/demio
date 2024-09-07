@@ -29,3 +29,11 @@ export type SaveDataRequestPayload = Partial<FormValues> & {
   sessionTime?: number;
   engagementPercentage?: string;
 };
+
+export type SaveGdprRequestPayload = Omit<
+  FormValues,
+  "passwordFirst" | "passwordSecond"
+> & {
+  sessionTime: number;
+  engagementPercentage: string;
+};

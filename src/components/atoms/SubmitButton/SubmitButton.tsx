@@ -12,15 +12,7 @@ export type SubmitButtonProps = Omit<ButtonProps, "htmlType">;
  */
 const SubmitButton = ({ disabled, children, ...props }: SubmitButtonProps) => {
   const someFilled = (values: ValueOf<FormValues>[]): boolean =>
-    values.some((value) => {
-      if (
-        !Array.isArray(value) &&
-        (typeof value !== "object" || value === null)
-      ) {
-        return value !== undefined;
-      }
-      return someFilled(!Array.isArray(value) ? Object.values(value) : value);
-    });
+    values.some((value) => value !== undefined);
 
   const hasErrors = (fieldError: ReturnType<FormInstance["getFieldsError"]>) =>
     fieldError.some(({ errors }) => errors.length > 0);
